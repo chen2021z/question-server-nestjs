@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Query } from '@nestjs/common';
 import { QuestionDto } from './dto/question.dto';
 
 @Controller('question')
@@ -35,6 +35,6 @@ export class QuestionController {
 
   @Get('test')
   test(): string {
-    return 'question test!';
+    throw new HttpException('获取数据失败', HttpStatus.BAD_REQUEST)
   }
 }
