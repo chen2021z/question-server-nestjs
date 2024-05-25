@@ -2,11 +2,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QuestionModule } from './question/question.module';
-import { QuestionService } from './question/question.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [QuestionModule],
+  imports: [
+    QuestionModule,
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PROT}/${process.env.MONGO_DATABASE}`,
+    ),
+  ],
   controllers: [AppController],
-  providers: [AppService, QuestionService],
+  providers: [AppService],
 })
 export class AppModule {}
