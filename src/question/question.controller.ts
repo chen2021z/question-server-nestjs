@@ -2,6 +2,7 @@ import { QuestionService } from './question.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -17,25 +18,31 @@ export class QuestionController {
   // 依赖注入
   constructor(private readonly QuestionService: QuestionService) {}
 
+  @Delete(':id')
+  deleteOne(@Param('id') id: string) {
+    return this.QuestionService.delete(id);
+  }
+
   @Post()
-  create(){
-    console.log(999999999);
-    
+  create() {
     return this.QuestionService.create();
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query('keyword') keyword: string,
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
   ) {
-    return {
-      list: [1, 2, 3],
-      count: 10,
+    const list = await this.QuestionService.findAllList({
       keyword,
       page,
       pageSize,
+    });
+    const count = await this.QuestionService.countAll({ keyword });
+    return {
+      list,
+      count,
     };
   }
 
@@ -47,12 +54,7 @@ export class QuestionController {
 
   @Patch(':id')
   updateOne(@Param('id') id: string, @Body() questionDto: QuestionDto) {
-    console.log(id, questionDto);
-
-    return {
-      id,
-      questionDto,
-    };
+    return this.QuestionService.update(id, questionDto);
   }
 
   @Get('test')
